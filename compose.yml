@@ -4,12 +4,16 @@ services:
     image: shaikmustafa/flm2026:dbimage
     ports:
       - "3306:3306"
+    networks:
+      - mynetwork
     deploy:
       replicas: 1
   auth_service:
     image: shaikmustafa/flm2026:authimage
     ports:
       - "5001:5001"
+    networks:
+      - mynetwork
     deploy:
       replicas: 1
     depends_on:
@@ -18,6 +22,8 @@ services:
     image: shaikmustafa/flm2026:bookimage
     ports:
       - "5002:5002"
+    networks:
+      - mynetwork
     deploy:
       replicas: 1
     depends_on:
@@ -26,17 +32,24 @@ services:
     image: shaikmustafa/flm2026:borrowimage
     ports:
       - "5003:5003"
+    networks:
+      - mynetwork
     deploy:
       replicas: 1
     depends_on:
       - db
-  app_service:
+  frontend:
     image: shaikmustafa/flm2026:appimage
     ports:
       - "5000:5000"
+    networks:
+      - mynetwork
     deploy:
       replicas: 1
     depends_on:
       - auth_service
       - book_service
       - borrow_service
+  networks:
+    mynetwork:
+      driver: overlay
